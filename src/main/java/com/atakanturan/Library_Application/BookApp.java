@@ -3,6 +3,7 @@ package com.atakanturan.Library_Application;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.awt.print.Book;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
@@ -59,6 +60,7 @@ class KitapBulunamadiException extends Exception{
 }
 
 
+
 public class BookApp {
     //Scanner
     private static Scanner scanner = new Scanner(System.in);
@@ -85,8 +87,8 @@ public class BookApp {
                 System.out.println("\n KİTAP YÖNETİM UYGULAMASI");
                 System.out.println("1-Kitap ekle");
                 System.out.println("2-Kitap listele");
-                System.out.println("3/Kitap ara");
-                System.out.println("Çıkış");
+                System.out.println("3-Kitap ara");
+                System.out.println("4-Çıkış");
                 System.out.println("Seçiminiz");
 
                 int secim = scanner.nextInt();
@@ -118,23 +120,54 @@ public class BookApp {
                     }
                     //Kitap Listesi
                     case 2 -> {
-                        System.out.println();
+                        //Interative for
+                        for (int i = 0; i < kitapSayisi; i++) {
+                            kutuphane[i].bilgileriYazdir();
+                            
+                        }
                     }
                     //Kitap Ara
-                    case 3 -> {}
+                    case 3 -> {
+                        System.out.println("Aranıcak kitap");
+                        String aranan = scanner.nextLine();
+                        boolean kitapVarmi=false;
+                        for (int i = 0; i < kitapSayisi; i++) {
+                            if (kutuphane[i].getAd().equalsIgnoreCase(aranan)){
+                                kutuphane[i].bilgileriYazdir();
+                                kitapVarmi = true;
+                                break;
+                            }
+                        }//end for
+                        try {
+                            if (!kitapVarmi)
+                                throw new KitapBulunamadiException("Kitap bulunamadı "+ aranan);
+
+                        }catch (KitapBulunamadiException kitapBulunamadiException){
+                            System.out.println(kitapBulunamadiException.getMessage());
+                        }
+                    }
 
                     //Çıkış
-                    case 4 -> {}
+                    case 4 -> {
+                        System.out.println("Çıkıl yaılıyor");
+                        System.exit(0);
+                    }
+
                     default -> System.out.println("Hatalı seçim");
                 }//end switch
 
                 //Wrappeer/Math/Random örneği
                 Integer toplamKitap = kitapSayisi;//Wrapper
-                System.out.println("Toplram kitap sayısı" + toplamKitap);
+                System.out.println("Toplram kitap sayısı " + toplamKitap);
                 System.out.println("Random index(0-"+(kitapSayisi-1)+"):" + new Random().nextInt(Math.max(1,kitapSayisi)));
             }
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        BookApp bookApp = new BookApp();
+        bookApp.allBookMethod();
     }
 }
