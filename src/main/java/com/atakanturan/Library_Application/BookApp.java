@@ -3,62 +3,23 @@ package com.atakanturan.Library_Application;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.xml.transform.Source;
 import java.awt.print.Book;
+import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 import java.util.Scanner;
 
-
-// Enum ile kitap türleri
-enum KitapTuru {
-    Roman, Bılım, Tarıh, Teknoloj,Other
-}
-
-//Kitap Class
-
-@Getter
-@Setter
-
-
-class Kitap {
-    //Field
-    private int id;
-    private String ad;
-    private String yazar;
-    private KitapTuru tur;
-    private LocalDate eklenmeTarihi;
-
-
-    // Constructor(parametresiz)
-    public Kitap() {
-    }
-
-    // Constructor(parametreli)
-
-    public Kitap(int id, String ad, String yazar, KitapTuru tur, LocalDate eklenmeTarihi) {
-        this.id = id;
-        this.ad = ad;
-        this.yazar = yazar;
-        this.tur = tur;
-        this.eklenmeTarihi = LocalDate.now();
-    }
-
-    //Method
-    public void bilgileriYazdir() {
-        System.out.printf("ID: %d | %s - %s (%s) [%s]%n", id, ad, yazar, tur, eklenmeTarihi.format(DateTimeFormatter.ofPattern("dd/MMMM/yyyy")));
-
-    }
-
-}
-//Customise Exception : Kitap bulunmazsa
+/*
+//3- Customise Exception : Kitap bulunmazsa
 class KitapBulunamadiException extends Exception{
     //Parametresiz Constructor
     public KitapBulunamadiException(String message) {
         super(message);
     }
 }
-
+*/
 
 
 public class BookApp {
@@ -68,10 +29,29 @@ public class BookApp {
     //Login
     public boolean girisYap() {
         //Kullanıcan kullanıadı,şifre
-        return true;
+        String kullaniciAdi, sifre, dbKullaniciAdi = "root", dbSifre = "root";
 
+        System.out.println("Kullanıcı adını yazınız");
+        kullaniciAdi = scanner.nextLine();
+
+        System.out.println("Şifre adını yazınız");
+        sifre = scanner.nextLine();
+
+        //karar mercisi
+        if (kullaniciAdi.equals(dbKullaniciAdi) && sifre.equals(dbSifre)) {
+            System.out.println("bilgiler doğru admin sayfasına yönlendiriliyorsunuz");
+            return true;
+        } else{
+            System.out.println("Kullanıcı adı veya şifre yanlış girdiniz");
+          girisYap();
+        }
+        return true;
     }
 
+    //logout
+    public void  cikis(){
+        System.out.println("Htalı seçim");
+    }
     //Method
     public void allBookMethod() {
         Scanner scanner = new Scanner(System.in);
@@ -81,7 +61,9 @@ public class BookApp {
         int kitapSayisi = 0;
 
         //login oldu mu ?
+
         boolean devam = girisYap();
+        System.out.println(devam);
         try {
             while (devam) {
                 System.out.println("\n KİTAP YÖNETİM UYGULAMASI");
@@ -102,13 +84,13 @@ public class BookApp {
                         if (kitapSayisi == kutuphane.length){
                             System.out.println("Dizi dolu, yeni kitap ekleyemezsiniz");
                         }else{
-                            System.out.println("Kitap adı");
+                            System.out.print("Kitap adı: ");
                             String yazar = scanner.nextLine();
 
-                            System.out.println("Kitap yazarı");
+                            System.out.print("Kitap yazarı: ");
                             String ad = scanner.nextLine();
 
-                            System.out.println("Kitap Türü Seçin 0-Roman, 1-Bilim 2-Tarih, 3-Teknoloji, 4-Diğer");
+                            System.out.print("Kitap Türü Seçin 0-Roman, 1-Bilim 2-Tarih, 3-Teknoloji, 4-Diğer : ");
                             int turIndex = scanner.nextInt();
                             KitapTuru kitapTuru=KitapTuru.values()[turIndex];
 
@@ -153,7 +135,7 @@ public class BookApp {
                         System.exit(0);
                     }
 
-                    default -> System.out.println("Hatalı seçim");
+                    default -> cikis();
                 }//end switch
 
                 //Wrappeer/Math/Random örneği
@@ -166,8 +148,4 @@ public class BookApp {
         }
     }
 
-    public static void main(String[] args) {
-        BookApp bookApp = new BookApp();
-        bookApp.allBookMethod();
-    }
 }
